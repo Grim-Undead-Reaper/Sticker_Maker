@@ -6,4 +6,4 @@ class FileHandler:
         self.filePicker = ft.FilePicker()
 
     def GetImageInDirectory(self):
-        self.filePicker.pick_files(allow_multiple=False)
+        self.filePicker.pick_files(dialog_title="Escolha sua imagem.", initial_directory='/', allow_multiple=False, allowed_extensions=["jpeg", "png"])
