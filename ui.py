@@ -10,26 +10,32 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
         TkinterDnD.require(self)
 
-        self.geometry("600x500")
+        self.geometry("700x600")
         self.title("MySticker")
-        
+
+        self.CreateWidgets()
+
+    def on_drop(self, event):
+        files = self.tk.splitlist(event.data)
+        print(f"Filepath: {files[0]}")
+
+    def CreateWidgets(self):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(2, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(2, weight=1)
 
-        self.center_frame = ctk.CTkFrame(self)
+        self.center_frame = ctk.CTkFrame(self, width=650, height=550)
         self.center_frame.grid(row=1, column=1)
 
         self.drop_frame = ctk.CTkFrame(self.center_frame, fg_color="gray")
         self.drop_frame.pack(pady=20)
 
+        self.drop_label = ctk.CTkLabel(self.drop_frame, text="Drop here.")
+        self.drop_label.pack()
+
         self.drop_frame.drop_target_register(DND_FILES)
         self.drop_frame.dnd_bind("<<Drop>>", self.on_drop)
 
-        self.pick_file = ctk.CTkButton(self.center_frame, text="Hello, world!", command=filehandler.SearchFile)
-        self.pick_file.pack(pady=20)
-
-    def on_drop(self, event):
-        files = self.tk.splitlist(event.data)
-        print(f"Filepath: {files[0]}")
+        self.pick_file_btn = ctk.CTkButton(self.center_frame, text="Choice a file", command=filehandler.SearchFile)
+        self.pick_file_btn.pack(pady=20)
