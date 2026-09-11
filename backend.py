@@ -33,11 +33,21 @@ class FileHandler:
             print("No file chosen")
 
     def DisplayInfo(self):
-        print(f"\nFilepath: {self.file['filepath']}\nFilename: {self.file['filename']}")
+        print(f"\nFilepath: {self.file['filepath']}\nFilename: {self.file['filename']}\nName and Extensions: {str(self.file['filename']).split('.')}")
 
 class ImageHandler:
     def __init__(self):
-        pass
+        self.image = {"fullpath": None, "name": None, "extension": None}
+        self.backup_path = os.getenv("BACKUP_PATH")
 
     def SaveFileOnBackup(self):
         pass
+
+    def GetFile(self, filepath):
+        self.image["fullpath"] = filepath
+        self.image["name"], self.image["extension"] = str(filepath).split(".i")
+
+    def ResizeImage(self):
+        img = Image.open(self.image["fullpath"])
+        res = img.resize((75, 75))
+        img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
