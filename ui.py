@@ -18,8 +18,7 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
 
     def on_drop(self, event):
         files = self.tk.splitlist(event.data)
-        filehandler.filepath = files[0]
-        filehandler.DisplayInfo()
+        filehandler.GetFilename(files[0])
 
     def CreateWidgets(self):
         self.grid_rowconfigure(0, weight=1)
