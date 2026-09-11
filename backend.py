@@ -11,6 +11,7 @@ class FileHandler:
     def __init__(self):
         self.file = {"filepath": None, "filename": None}
         self.files_allowed = [".png", ".jpeg", ".jpg", ".bmp"]
+        self.imagehandler = ImageHandler()
 
     def SearchFile(self) -> None:
         self.GetFilename(filedialog.askopenfilename(
@@ -28,7 +29,9 @@ class FileHandler:
         if filepath != "":
             self.file["filepath"] = filepath
             self.file["filename"] = Path(self.file["filepath"]).name
-            self.DisplayInfo()
+            self.imagehandler.GetFile(self.file["filepath"])
+            self.imagehandler.ResizeImage()
+            #self.DisplayInfo()
         else:
             print("No file chosen")
 
@@ -45,9 +48,18 @@ class ImageHandler:
 
     def GetFile(self, filepath):
         self.image["fullpath"] = filepath
-        self.image["name"], self.image["extension"] = str(filepath).split(".i")
+        result_list = str(Path(filepath).name).split(".")
+
+        self.image["name"] = result_list[0]
+        self.image["extension"] = result_list[1]
 
     def ResizeImage(self):
-        img = Image.open(self.image["fullpath"])
-        res = img.resize((75, 75))
-        img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+        backup_filepath = Path(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+
+        if backup_filepath.is_file():
+            print("O arquivo já existe")
+            return None
+        else:
+            img = Image.open(self.image["fullpath"])
+            res = img.resize((75, 75))
+            img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
