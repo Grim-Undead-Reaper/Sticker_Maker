@@ -2,6 +2,10 @@ from tkinter import filedialog
 from PIL import Image
 import customtkinter as ctk
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv(dotenv_path=r"Secrets/MySecrets.env")
 
 class FileHandler:
     def __init__(self):
