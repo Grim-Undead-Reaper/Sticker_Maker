@@ -50,7 +50,7 @@ class ImageHandler:
         self.image["fullpath"] = filepath
         result_list = str(Path(filepath).name).split(".")
 
-        self.image["name"] = result_list[0]
+        self.image["name"] =  str(result_list[0]).replace(" ", "_")
         self.image["extension"] = result_list[1]
 
     def ResizeImage(self):
@@ -62,4 +62,6 @@ class ImageHandler:
         else:
             img = Image.open(self.image["fullpath"])
             res = img.resize((75, 75))
-            img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+            print(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+            #img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+
