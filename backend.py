@@ -9,29 +9,16 @@ load_dotenv(dotenv_path=r"Secrets/MySecrets.env")
 
 class FileHandler:
     def __init__(self):
-        self.file = {"filepath": None, "filename": None}
-        self.files_allowed = [".png", ".jpeg", ".jpg", ".bmp"]
+        self.file = {"filepath": "", "filename": "", "extesion": ""}
         self.imagehandler = ImageHandler()
 
-    def SearchFile(self) -> None:
-        self.GetFilename(filedialog.askopenfilename(
-            title="Choice you image file.",
-            multiple=False,
-            initialdir=r"E:\Pedro\Downloads",
-            filetypes=(
-                ("image file", self.files_allowed[0]),
-                ("image file", self.files_allowed[1]),
-                ("image file", self.files_allowed[2]),
-                ("image file", self.files_allowed[3])))
-            )
-
-    def GetFilename(self, filepath) -> None:
+    def GetFile(self, filepath) -> None:
         if filepath != "":
             self.file["filepath"] = filepath
-            self.file["filename"] = Path(self.file["filepath"]).name
-            self.imagehandler.GetFile(self.file["filepath"])
-            self.imagehandler.ResizeImage()
-            #self.DisplayInfo()
+            name_and_extension = str(Path(self.file["filepath"]).name).split(".")
+            self.file["filename"] = str(name_and_extension[0]).replace(" ", "_")
+            self.file["extension"] = name_and_extension[1]
+            self.imagehandler.ResizeImage(self.file)
         else:
             print("No file chosen")
 
@@ -40,28 +27,23 @@ class FileHandler:
 
 class ImageHandler:
     def __init__(self):
-        self.image = {"fullpath": None, "name": None, "extension": None}
+        self.image = {"filepath": "", "filename": "", "extension": ""}
         self.backup_path = os.getenv("BACKUP_PATH")
 
     def SaveFileOnBackup(self):
         pass
 
-    def GetFile(self, filepath):
-        self.image["fullpath"] = filepath
-        result_list = str(Path(filepath).name).split(".")
+    def ResizeImage(self, filepath: dict):
+        self.image = filepath
 
-        self.image["name"] =  str(result_list[0]).replace(" ", "_")
-        self.image["extension"] = result_list[1]
-
-    def ResizeImage(self):
-        backup_filepath = Path(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+        backup_filepath = Path(f"{self.backup_path}/{self.image['filename']}_preview.{self.image['extension']}")
 
         if backup_filepath.is_file():
             print("O arquivo já existe")
             return None
         else:
-            img = Image.open(self.image["fullpath"])
+            img = Image.open(self.image["filepath"])
             res = img.resize((75, 75))
-            print(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
-            #img.save(f"{self.backup_path}/{self.image['name']}_preview.{self.image['extension']}")
+            print(f"{self.backup_path}/{self.image['filename']}_preview.{self.image['extension']}")
+            #img.save(f"{self.backup_path}/{self.image['filename']}_preview.{self.image['extension']}")
 
