@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from backend import FileHandler
 from tkinterdnd2 import TkinterDnD, DND_FILES
+from tkinter import filedialog
 
 filehandler = FileHandler()
 
@@ -14,11 +15,25 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.title("MySticker")
         self.configure(fg_color="black")
 
+        self.files_allowed = [".png", ".jpeg", ".jpg", ".bmp"]
+
         self.CreateWidgets()
+
+    def SeachFile(self):
+        filehandler.GetFile(filedialog.askopenfilename(
+            title="Choice you image file.",
+            multiple=False,
+            initialdir="/",
+            filetypes=(
+                ("Image file", self.files_allowed[0]),
+                ("Image file", self.files_allowed[1]),
+                ("Image file", self.files_allowed[2]),
+                ("Image file", self.files_allowed[3])))
+        )
 
     def on_drop(self, event):
         files = self.tk.splitlist(event.data)
-        filehandler.GetFilename(files[0])
+        filehandler.GetFile(files[0])
 
     def CreateWidgets(self):
 
@@ -43,5 +58,5 @@ class App(ctk.CTk, TkinterDnD.DnDWrapper):
         self.info_label = ctk.CTkLabel(self.center_frame, text="Or")
         self.info_label.pack()
 
-        self.pick_file_btn = ctk.CTkButton(self.center_frame, text="Choice a file", command=filehandler.SearchFile, width=200, height=75)
+        self.pick_file_btn = ctk.CTkButton(self.center_frame, text="Choice a file", command=self.SeachFile, width=200, height=75)
         self.pick_file_btn.pack(pady=20)
